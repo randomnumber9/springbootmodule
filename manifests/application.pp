@@ -12,6 +12,8 @@ define springbootmodule::application(
   $app_config = undef,
   $security_content = undef,
   $logback_config = undef,
+  $owner = "springboot",
+  $group = "springboot",
   $service_name = "springboot-${title}",
   $security_file = 'puppet:///modules/springbootmodule/security.xml',
   $app_file = 'puppet:///modules/springbootmodule/app.xml',
@@ -26,6 +28,9 @@ define springbootmodule::application(
 
       file {"${path}/cache/${app_name}" :
       ensure => 'directory',
+      owner    => "${owner}",
+      group    => "${group}",
+      mode     => 0775
       } ->
 
       exec { "/usr/bin/wget -N ${source}":
@@ -48,6 +53,9 @@ define springbootmodule::application(
 
       file {"${path}/apps/${app_name}" :
       ensure => 'directory',
+      owner    => "${owner}",
+      group    => "${group}",
+      mode     => 0775,
       } ->
 
       file { "${path}/apps/${app_name}/${filename}":
@@ -59,6 +67,9 @@ define springbootmodule::application(
 
       file {"${path}/conf/${app_name}" :
       ensure => 'directory',
+      owner    => "${owner}",
+      group    => "${group}",
+      mode     => 0775,
       }
 
       if ( $service == true ) {
