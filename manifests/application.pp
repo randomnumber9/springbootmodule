@@ -46,9 +46,9 @@ define springbootmodule::application(
       exec { "/usr/bin/service ${service_name} stop":
         alias       => "springbootstop${title}",
         cwd         => "${path}/cache/${app_name}",
-        subscribe   => File["springbootcache"],
+        subscribe   => File["springbootcache${title}"],
         refreshonly => true,
-        before      => File["springbootmaster"],
+        before      => File["springbootmaster${title}"],
       } ->
 
       file {"${path}/apps/${app_name}" :
