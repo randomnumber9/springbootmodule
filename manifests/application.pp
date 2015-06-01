@@ -82,7 +82,7 @@ define springbootmodule::application(
       if ( $service == true ) {
         file {"/etc/init.d/${service_name}":
           ensure  => 'file',
-          content => template('springboot/initd-springboot-appl.erb'),
+          content => template('springbootmodule/initd-springboot-appl.erb'),
           owner   => 'root',
           group   => 'root',
           mode    => '0755',
