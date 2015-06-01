@@ -63,14 +63,21 @@ define springbootmodule::application(
         ensure  => 'file',
         notify  => Service[$service_name],
         source  => "${path}/cache/${app_name}/${filename}",
-      }
+      } ->
 
       file {"${path}/conf/${app_name}" :
       ensure => 'directory',
       owner    => "${owner}",
       group    => "${group}",
       mode     => 0775,
-      }
+      } ->
+
+      file {"${path}/logs/${app_name}" :
+      ensure => 'directory',
+      owner    => "${owner}",
+      group    => "${group}",
+      mode     => 0775,
+    }
 
       if ( $service == true ) {
         file {"/etc/init.d/${service_name}":
