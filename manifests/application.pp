@@ -34,17 +34,17 @@ define springbootmodule::application(
       } ->
 
       exec { "/usr/bin/wget -N ${source}":
-        alias => "springbootlatest",
+        alias => "springbootlatest${title}",
         cwd => "${path}/cache/${app_name}",
       } ->
 
       file { "${path}/cache/${app_name}/${filename}":
-        alias   => "springbootcache",
+        alias   => "springbootcache${title}",
         ensure  => 'file',
       } ->
 
       exec { "/usr/bin/service ${service_name} stop":
-        alias       => "springbootstop",
+        alias       => "springbootstop${title}",
         cwd         => "${path}/cache/${app_name}",
         subscribe   => File["springbootcache"],
         refreshonly => true,
@@ -59,7 +59,7 @@ define springbootmodule::application(
       } ->
 
       file { "${path}/apps/${app_name}/${filename}":
-        alias   => "springbootmaster",
+        alias   => "springbootmaster${title}",
         ensure  => 'file',
         notify  => Service[$service_name],
         source  => "${path}/cache/${app_name}/${filename}",
