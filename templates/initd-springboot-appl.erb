@@ -1,0 +1,130 @@
+#!/bin/bash
+
+RELATIVE_PATH="<%= @path %>"
+SERVICE_NAME="<%= @service_name %>"
+APP_NAME="<%= @app_name %>"
+APP_VERSION="<%= @version %>"
+LISTEN_PORT="<%= @port %>"
+EXEC_PARAMS="<%= @exec_params %>"
+ADDL_PARAMS="<%= @addl_params %>"
+USER="springboot"
+CONFIG_FILE="${RELATIVE_PATH}/conf/${APP_NAME}/${APP_NAME}.properties"
+PIDFile="${RELATIVE_PATH}/apps/${APP_NAME}/${APP_NAME}.pid"
+APPLICATION_PATH="${RELATIVE_PATH}/apps/${APP_NAME}/${APP_NAME}-${APP_VERSION}"
+START_LOG="${RELATIVE_PATH}/logs/${APP_NAME}/${APP_NAME}.start.log"
+FILE_NAME="<%= @filename %>"
+JARFile=${RELATIVE_PATH}/apps/${APP_NAME}/${FILE_NAME}
+
+PID="-1"
+NOPID="-1"
+
+function print_process {
+  echo $(<"$PIDFile")
+}
+
+function check_pid_file {
+  if [ -f $PIDFile ]
+  then
+    PID=$(print_process)
+    return 0;
+  else
+    PID="-1"
+    return 1;
+  fi
+}
+
+function check_pid_running {
+  check_pid_file
+  if [ "$PID" == "$NOPID" ]
+  then
+    return 1
+  fi
+  if ps -p $PID > /dev/null
+  then
+    return 0
+  else
+    return 1
+  fi
+}
+
+function stop_process {
+
+  echo -n "Stopping $SERVICE_NAME "
+
+  if [ -f $PIDFile ]; then
+    read kpid < $PIDFile
+    kwait=30
+    count=0
+    # Try issuing SIGTERM
+
+    kill -15 $kpid
+    while ( ps --pid $kpid > /dev/null )
+      do
+        if [ $count -gt $kwait ]; then
+          kill -9 $kpid
+        else
+          sleep 1
+          count=$(expr $count + 1)
+        fi
+      done
+  fi
+
+  rm -f $PIDFile
+  echo
+
+}
+
+case "$1" in
+
+status)
+  if check_pid_running
+  then
+    echo "Process is running (" $PID ")"
+    exit 0
+  else
+    echo "Process not running"
+    exit 3
+  fi
+;;
+
+stop)
+ stop_process
+;;
+
+start)
+  if check_pid_running
+  then
+    echo "Process already running"
+    exit 1
+  fi
+  sudo su - $USER -c "cd /opt/springboot/apps/$APP_NAME;java $EXEC_PARAMS -jar $JARFile $ADDL_PARAMS" >> $START_LOG 2>&1 &
+  echo "Process started"
+;;
+
+debug)
+  if check_pid_running
+  then
+    echo "Process already running"
+    exit 0
+  fi
+  nohup java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=5005,suspend=n -jar $JARFile >/dev/null 2>&1 &
+
+  echo "Process started"
+;;
+
+restart)
+  $0 stop
+  if [ $? = 1 ]
+  then
+    exit 1
+  fi
+  $0 start
+;;
+
+*)
+  echo "Usage: $0 {start|stop|restart|debug|status}"
+  exit 1
+
+esac
+
+exit 0
