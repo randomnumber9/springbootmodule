@@ -97,16 +97,6 @@ define springbootmodule::application(
         }
       }
 
-      if ( $cleandirs ) {
-
-        exec { "find ! -name ${filename} -type f -exec rm -f {} +":
-          cwd       =>  "${path}/cache/${app_name}",
-          subscribe =>  Service[$service_name],
-          path      =>  "/usr/bin"
-        }
-
-      }
-
     }
     'absent': {
       service { $service_name :
