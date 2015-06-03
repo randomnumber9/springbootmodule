@@ -104,10 +104,6 @@ define springbootmodule::application(
           subscribe =>  Service[$service_name],
         }
 
-        exec { "find ! -name ${filename} -type f -exec rm -f {} +":
-          cwd => "${path}/apps/${app_name}",
-          subscribe =>  Service[$service_name],
-        }
       }
 
     }
