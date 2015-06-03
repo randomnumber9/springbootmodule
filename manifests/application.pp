@@ -18,6 +18,7 @@ define springbootmodule::application(
   $security_file = 'puppet:///modules/springbootmodule/security.xml',
   $app_file = 'puppet:///modules/springbootmodule/app.xml',
   $filename = inline_template('<%= require \'uri\'; File.basename(URI::parse(@source).path) %>'),
+  $cleandirs = true,
 )
 {
   Exec { user => 'springboot'}
@@ -52,10 +53,10 @@ define springbootmodule::application(
       } ->
 
       file {"${path}/apps/${app_name}" :
-      ensure => 'directory',
-      owner    => "${owner}",
-      group    => "${group}",
-      mode     => 0775,
+        ensure => 'directory',
+        owner    => "${owner}",
+        group    => "${group}",
+        mode     => 0775,
       } ->
 
       file { "${path}/apps/${app_name}/${filename}":
@@ -66,18 +67,18 @@ define springbootmodule::application(
       } ->
 
       file {"${path}/conf/${app_name}" :
-      ensure => 'directory',
-      owner    => "${owner}",
-      group    => "${group}",
-      mode     => 0775,
+        ensure => 'directory',
+        owner    => "${owner}",
+        group    => "${group}",
+        mode     => 0775,
       } ->
 
       file {"${path}/logs/${app_name}" :
-      ensure => 'directory',
-      owner    => "${owner}",
-      group    => "${group}",
-      mode     => 0775,
-    }
+        ensure => 'directory',
+        owner    => "${owner}",
+        group    => "${group}",
+        mode     => 0775,
+      }
 
       if ( $service == true ) {
         file {"/etc/init.d/${service_name}":
@@ -95,6 +96,20 @@ define springbootmodule::application(
           hasrestart => true,
         }
       }
+
+      if ( $cleandirs ) {
+
+        exec { "find ! -name ${filename} -type f -exec rm -f {} +":
+          cwd       =>  "${path}/cache/${app_name}",
+          subscribe =>  Service[$service_name],
+        }
+
+        exec { "find ! -name ${filename} -type f -exec rm -f {} +":
+          cwd => "${path}/apps/${app_name}",
+          subscribe =>  Service[$service_name],
+        }
+      }
+
     }
     'absent': {
       service { $service_name :
