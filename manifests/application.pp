@@ -18,7 +18,7 @@ define springbootmodule::application(
   $security_file = 'puppet:///modules/springbootmodule/security.xml',
   $app_file = 'puppet:///modules/springbootmodule/app.xml',
   $filename = inline_template('<%= require \'uri\'; File.basename(URI::parse(@source).path) %>'),
-  $cleandirs = true,
+  $cleandirs = false,
 )
 {
   Exec { user => 'springboot'}
@@ -97,21 +97,21 @@ define springbootmodule::application(
         }
       }
 
-      if ($cleandirs ==true ) {
+      #if ($cleandirs == true ) {
 
-        exec { "removeoldcache${title}":
-          command => "/usr/bin/find ! -name ${filename} -type f -exec rm -f {} +",
-          cwd     => "${path}/cache/${app_name}",
-          subscribe =>  Service[$service_name],
-        }
+        #exec { "removeoldcache${title}":
+        #  command => "/usr/bin/find ! -name ${filename} -type f -exec rm -f {} +",
+        #  cwd     => "${path}/cache/${app_name}",
+        #  subscribe =>  Service[$service_name],
+        #}
 
-        exec { "removeoldapps${title}":
-        command => "/usr/bin/find ! -name ${filename} -type f -exec rm -f {} +",
-        cwd     => "${path}/apps/${app_name}",
-        subscribe =>  Service[$service_name],
-      }
+        #exec { "removeoldapps${title}":
+        #  command => "/usr/bin/find ! -name ${filename} -type f -exec rm -f {} +",
+        #  cwd     => "${path}/apps/${app_name}",
+        #  subscribe =>  Service[$service_name],
+        #}
 
-      }
+      #}
 
     }
     'absent': {
