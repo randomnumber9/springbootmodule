@@ -97,23 +97,24 @@ define springbootmodule::application(
         }
       }
 
-      #if ($cleandirs == true ) {
+      if ($cleandirs == true ) {
 
-        #exec { "removeoldcache${title}":
-        #  command => "/usr/bin/find ! -name ${filename} -type f -exec rm -f {} +",
-        #  cwd     => "${path}/cache/${app_name}",
-        #  subscribe =>  Service[$service_name],
-        #}
+        exec { "removeoldcache${title}":
+          command => "/usr/bin/find ! -name ${filename} -type f -exec rm -f {} +",
+          cwd     => "${path}/cache/${app_name}",
+          subscribe =>  Service[$service_name],
+        }
 
-        #exec { "removeoldapps${title}":
-        #  command => "/usr/bin/find ! -name ${filename} -type f -exec rm -f {} +",
-        #  cwd     => "${path}/apps/${app_name}",
-        #  subscribe =>  Service[$service_name],
-        #}
+        exec { "removeoldapps${title}":
+          command => "/usr/bin/find ! -name ${filename} -type f -exec rm -f {} +",
+          cwd     => "${path}/apps/${app_name}",
+          subscribe =>  Service[$service_name],
+        }
 
-      #}
+      }
 
     }
+
     'absent': {
       service { $service_name :
         ensure => stopped,
