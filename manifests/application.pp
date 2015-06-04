@@ -97,6 +97,16 @@ define springbootmodule::application(
         }
       }
 
+      if ($cleandirs ==true ) {
+
+        exec { "removeoldcache${title}":
+          command => "/usr/bin/find ! -name ${filename} -type f -exec rm -f {} +",
+          cwd     => "${path}/cache/${filename}",
+          subscribe =>  Service[$service_name],
+        }
+
+      }
+
     }
     'absent': {
       service { $service_name :
