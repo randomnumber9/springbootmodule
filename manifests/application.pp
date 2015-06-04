@@ -101,7 +101,7 @@ define springbootmodule::application(
 
         exec { "removeoldcache${title}":
           command => "/usr/bin/find ! -name ${filename} -type f -exec rm -f {} +",
-          cwd     => "${path}/cache/${app_name}/${filename}",
+          cwd     => "${path}/cache/${app_name}",
           subscribe =>  Service[$service_name],
         }
 
