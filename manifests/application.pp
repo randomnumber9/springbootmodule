@@ -106,7 +106,8 @@ define springbootmodule::application(
         }
 
         exec { "removeoldapps${title}":
-          command => "/usr/bin/find ! -name ${filename} -type f -exec rm -f {} +",
+          #command => "/usr/bin/find ! -name ${filename} -type f -exec rm -f {} +",
+          command => "/usr/bin/find ! \( -name ${filename} -o -name '*.pid' \) -type f -exec rm -f {} +",
           cwd     => "${path}/apps/${app_name}",
           subscribe =>  Service[$service_name],
         }
