@@ -18,7 +18,7 @@ define springbootmodule::application(
   $security_file = 'puppet:///modules/springbootmodule/security.xml',
   $app_file = 'puppet:///modules/springbootmodule/app.xml',
   $filename = inline_template('<%= require \'uri\'; File.basename(URI::parse(@source).path) %>'),
-  $cleandirs = false,
+  $cleandirs = true,
 )
 {
   Exec { user => 'springboot'}
