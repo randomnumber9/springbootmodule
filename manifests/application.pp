@@ -34,7 +34,7 @@ define springbootmodule::application(
       mode     => 0775
       } ->
 
-      exec { "/usr/bin/wget --no-cookies -N ${source}":
+      exec { "/usr/bin/wget -N ${source}":
         alias => "springbootlatest${title}",
         cwd => "${path}/cache/${app_name}",
       } ->
