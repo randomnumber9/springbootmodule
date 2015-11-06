@@ -17,7 +17,6 @@ define springbootmodule::application(
   $service_name = "springboot-${title}",
   $security_file = 'puppet:///modules/springbootmodule/security.xml',
   $app_file = 'puppet:///modules/springbootmodule/app.xml',
-  $filename=$title,
   $cleandirs = true,
 )
 {
@@ -38,10 +37,13 @@ define springbootmodule::application(
       exec { "/usr/bin/wget -N ${source}":
         alias => "springbootlatest${title}",
         cwd => "${path}/cache/${app_name}",
-      } ->
+      }
+
+      $url_array = split($source, '/')
+      $jar_file = $url_array[-1]
 
       file { 'creating file in cache directory':
-        path    => "${path}/cache/${app_name}/${filename}",
+        path    => "${path}/cache/${app_name}/${jar_file}",
         alias   => "springbootcache${title}",
         ensure  => file,
       } ->
@@ -61,11 +63,11 @@ define springbootmodule::application(
         mode     => 0775,
       } ->
 
-      file { "${path}/apps/${app_name}/${filename}":
+      file { "${path}/apps/${app_name}/${jar_file}":
         alias   => "springbootmaster${title}",
         ensure  => 'file',
         notify  => Service[$service_name],
-        source  => "${path}/cache/${app_name}/${filename}",
+        source  => "${path}/cache/${app_name}/${jar_file}",
       } ->
 
       file {"${path}/conf/${app_name}" :
@@ -102,14 +104,14 @@ define springbootmodule::application(
       if ($cleandirs == true ) {
 
         exec { "removeoldcache${title}":
-          command => "/usr/bin/find ! -name ${filename} -type f -exec rm -f {} +",
+          command => "/usr/bin/find ! -name ${jar_file} -type f -exec rm -f {} +",
           cwd     => "${path}/cache/${app_name}",
           subscribe =>  Service[$service_name],
         }
 
         exec { "removeoldapps${title}":
-          #command => "/usr/bin/find ! -name ${filename} -type f -exec rm -f {} +",
-          command => "/usr/bin/find ! \( -name ${filename} -o -name '*.pid' \) -type f -exec rm -f {} +",
+          #command => "/usr/bin/find ! -name ${jar_file} -type f -exec rm -f {} +",
+          command => "/usr/bin/find ! \( -name ${jar_file} -o -name '*.pid' \) -type f -exec rm -f {} +",
           cwd     => "${path}/apps/${app_name}",
           subscribe =>  Service[$service_name],
         }
