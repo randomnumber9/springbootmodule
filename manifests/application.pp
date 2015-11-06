@@ -27,11 +27,12 @@ define springbootmodule::application(
   case $ensure {
     'installed', 'present' : {
 
-      file {"${path}/cache/${app_name}" :
-      ensure => 'directory',
-      owner    => "${owner}",
-      group    => "${group}",
-      mode     => 0775
+      file { 'creating cache directory':
+        path    => "${path}/cache/${app_name}",
+        ensure  => directory,
+        owner   => "${owner}",
+        group   => "${group}",
+        mode    => 0775
       } ->
 
       exec { "/usr/bin/wget -N ${source}":
@@ -39,9 +40,10 @@ define springbootmodule::application(
         cwd => "${path}/cache/${app_name}",
       } ->
 
-      file { "${path}/cache/${app_name}/${filename}":
+      file { 'creating file in cache directory':
+        path    => "${path}/cache/${app_name}/${filename}",
         alias   => "springbootcache${title}",
-        ensure  => 'file',
+        ensure  => file,
       } ->
 
       exec { "/usr/bin/service ${service_name} stop":
