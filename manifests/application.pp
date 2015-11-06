@@ -26,8 +26,7 @@ define springbootmodule::application(
   case $ensure {
     'installed', 'present' : {
 
-      file { 'creating cache directory':
-        path    => "${path}/cache/${app_name}",
+      file { "${path}/cache/${app_name}":
         ensure  => directory,
         owner   => "${owner}",
         group   => "${group}",
@@ -42,8 +41,7 @@ define springbootmodule::application(
       $url_array = split($source, '/')
       $jar_file = $url_array[-1]
 
-      file { 'creating file in cache directory':
-        path    => "${path}/cache/${app_name}/${jar_file}",
+      file { "${path}/cache/${app_name}/${jar_file}":
         alias   => "springbootcache${title}",
         ensure  => file,
       } ->
