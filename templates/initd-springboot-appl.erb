@@ -12,7 +12,7 @@ CONFIG_FILE="${RELATIVE_PATH}/conf/${APP_NAME}/${APP_NAME}.properties"
 PIDFile="${RELATIVE_PATH}/apps/${APP_NAME}/${APP_NAME}.pid"
 APPLICATION_PATH="${RELATIVE_PATH}/apps/${APP_NAME}/${APP_NAME}-${APP_VERSION}"
 START_LOG="${RELATIVE_PATH}/logs/${APP_NAME}/${APP_NAME}.start.log"
-FILE_NAME="<%= @filename %>"
+FILE_NAME="<%= @jar_file %>"
 JARFile=${RELATIVE_PATH}/apps/${APP_NAME}/${FILE_NAME}
 
 PID="-1"
