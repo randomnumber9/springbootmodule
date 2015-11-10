@@ -33,9 +33,9 @@ define springbootmodule::application(
         mode    => 0775
       } ->
 
-      exec { "/usr/bin/wget -v -d --no-cache --no-http-keep-alive -N ${source}":
+      exec { "/usr/bin/wget -N ${source}":
         alias   => "springbootlatest${title}",
-        cwd     => "${path}/cache/${app_name}",        
+        cwd     => "${path}/cache/${app_name}",
       }
 
       $url_array = split($source, '/')
