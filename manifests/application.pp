@@ -33,7 +33,9 @@ define springbootmodule::application(
         mode    => 0775
       } ->
 
-      exec { "/usr/bin/wget -N strip(${source})":
+      $no_whitespace_source = strip($source)
+
+      exec { "/usr/bin/wget -N strip(${no_whitespace_source})":
         alias   => "springbootlatest${title}",
         cwd     => "${path}/cache/${app_name}",
       }
