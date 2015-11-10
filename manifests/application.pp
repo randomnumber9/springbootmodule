@@ -33,7 +33,7 @@ define springbootmodule::application(
         mode    => 0775
       } ->
 
-      exec { "/usr/bin/wget -N ${source}":
+      exec { "/usr/bin/wget -N strip(${source})":
         alias   => "springbootlatest${title}",
         cwd     => "${path}/cache/${app_name}",
       }
