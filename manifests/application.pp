@@ -26,14 +26,14 @@ define springbootmodule::application(
   case $ensure {
     'installed', 'present' : {
 
+      $no_whitespace_source = strip($source)
+
       file { "${path}/cache/${app_name}":
         ensure  => directory,
         owner   => "${owner}",
         group   => "${group}",
         mode    => 0775
       } ->
-
-      $no_whitespace_source = strip($source)
 
       exec { "/usr/bin/wget -N strip(${no_whitespace_source})":
         alias   => "springbootlatest${title}",
