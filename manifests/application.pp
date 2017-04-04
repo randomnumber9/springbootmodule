@@ -32,7 +32,7 @@ define springbootmodule::application(
         ensure  => directory,
         owner   => "${owner}",
         group   => "${group}",
-        mode    => 0775
+        mode    => "0775"
       } ->
 
       exec { "/usr/bin/wget -N --no-passive-ftp ${no_whitespace_source}":
@@ -60,7 +60,7 @@ define springbootmodule::application(
         ensure => 'directory',
         owner    => "${owner}",
         group    => "${group}",
-        mode     => 0775,
+        mode     => "0775",
       } ->
 
       file { "${path}/apps/${app_name}/${jar_file}":
@@ -74,14 +74,14 @@ define springbootmodule::application(
         ensure => 'directory',
         owner    => "${owner}",
         group    => "${group}",
-        mode     => 0775,
+        mode     => "0775",
       } ->
 
       file {"${path}/logs/${app_name}" :
         ensure => 'directory',
         owner    => "${owner}",
         group    => "${group}",
-        mode     => 0775,
+        mode     => "0775",
       }
 
       if ( $service == true ) {
