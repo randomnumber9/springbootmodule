@@ -29,7 +29,7 @@ class springbootmodule (
     ensure   => "directory",
     owner    => "${owner}",
     group    => "${group}",
-    mode     => 0775,
+    mode     => "0775",
   }
   file { "apps":
     path     => "${homepath}/apps",
@@ -37,7 +37,7 @@ class springbootmodule (
     owner    => "${owner}",
     group    => "${group}",
     require  => File['springbootappdir'],
-    mode     => 0775,
+    mode     => "0775",
   }
   file { "conf":
     path     => "${homepath}/conf",
@@ -45,7 +45,7 @@ class springbootmodule (
     owner    => "${owner}",
     group    => "${group}",
     require  => File['springbootappdir'],
-    mode     => 0775,
+    mode     => "0775",
   }
   file { "logs":
     path     => "${homepath}/logs",
@@ -53,7 +53,7 @@ class springbootmodule (
     owner    => "${owner}",
     group    => "${group}",
     require  => File['springbootappdir'],
-    mode     => 0775,
+    mode     => "0775",
   }
   file { "cache":
     path     => "${homepath}/cache",
@@ -61,6 +61,6 @@ class springbootmodule (
     owner    => "${owner}",
     group    => "${group}",
     require  => File['springbootappdir'],
-    mode     => 0775,
+    mode     => "0775",
   }
 }
